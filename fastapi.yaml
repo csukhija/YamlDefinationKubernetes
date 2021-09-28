@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-deployment
+  labels:
+    app: fastapi-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: fastapi
+  template:
+    metadata:
+      labels:
+        app: fastapi
+    spec:
+      containers:
+      - name: fastapi
+        image: acrakstek.azurecr.io/tekion/fastapi
+        ports:
+        - containerPort: 80
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi-loadbalancer-service
+  labels:
+    app: fastapi
+spec:
+  type: LoadBalancer
+  selector:
+    app: fastapi
+  ports:
+    - port: 80
+      targetPort: 80
